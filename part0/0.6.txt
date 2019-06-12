@@ -1,0 +1,15 @@
+browser->server: HTTP POST https://fullstack-exampleapp.herokuapp.com/new_note_spa
+
+note over server:
+Server no longer requires redirect - 
+No additional HTTP requests sent
+end note
+
+server-->browser: 201 status code
+
+note over browser:
+Event handler creates and pushes
+New note to notes, rerendering the list.
+New note is sent to the server
+end note
+
