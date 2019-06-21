@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import axios from 'axios'
+import servisePersons from '../services/persons'
 
 import Filter from './Filter'
 import PersonsForm from './PersonsForm'
@@ -15,13 +15,12 @@ const App = () => {
     const [showAllNames, setShowAllNames] = useState(true);
 
     useEffect(() => {
-        axios.get("http://localhost:3001/persons")
-        .then((response) => {
-            setPersons(response.data);
-        })
+        servisePersons.getAll()
+            .then((initialPersonsList) => {
+                setPersons(initialPersonsList);
+            })
     }, []);
 
-    // console.log('prossessed', persons.length, 'names');
 
     const namesToDisplay = showAllNames ? persons : persons.filter((person) => {
         return person.name.toLocaleLowerCase().includes(filterName.toLocaleLowerCase());
@@ -38,10 +37,10 @@ const App = () => {
         setShowAllNames(false);
     }
 
-    const isAdded = (n) => {
-        return persons.map((person) => {
-            return person.name.toLocaleLowerCase();
-        }).indexOf(n.toLocaleLowerCase());
+    const getID = (n) => {
+        return persons.find((person) => {
+            return person.name.toLocaleLowerCase() === n.toLocaleLowerCase();
+        }) === undefined ? true : false;
     }
 
     const addPerson = (event) => {
@@ -50,19 +49,61 @@ const App = () => {
             name: newName,
             number: newNumber
         }
-        if (isAdded(newPerson.name) === -1) {
-            setPersons(persons.concat(newPerson));
+        const id = getID(newPerson.name);
+
+        if (id) {
+            servisePersons.create(newPerson)
+                .then(() => {
+                    setPersons(persons.concat(newPerson));
+                });
+
             setNewName("");
             setNewNumber("");
         }
+
         else {
-            alert(`Sorry, but ${newPerson.name} seems to be present in our records`);
+            const personToUpdate = persons.find((person) => {
+                return person.name === newPerson.name;
+            });
+
+            const updatedPerson = {
+                ...personToUpdate,
+                number: newPerson.number
+            }
+
+            const response = window.confirm(`${updatedPerson.name} exists. Do you want to update the number?`);
+            if (response) {
+                servisePersons.update(updatedPerson.id, updatedPerson)
+                    .then((updated) => {
+                        setPersons(persons.map((person) => {
+                            return person.id !== updated.id ? person : updated;
+                        }));
+                    });
+                setNewName('');
+                setNewNumber('');
+            }
+            else return;
         }
     }
 
+    const deletePerson = (id) => {
+        const response = window.confirm(`Delete ${persons.find(person => person.id === id).name}?`);
+        if (response) {
+            servisePersons.remove(id).then(() => {
+                console.log('deleted');
+                const updatedPersons = persons.filter((person) => {
+                    return person.id !== id;
+                });
+                setPersons(updatedPersons);
+            });
+        }
+        else return;
+    }
+
+
     const renderNames = () => namesToDisplay.map((person) => {
         return (
-            <Person key={person.name} name={person.name} number={person.number} />
+            <Person key={person.name} name={person.name} number={person.number} handler={() => deletePerson(person.id)} />
         );
     });
 
