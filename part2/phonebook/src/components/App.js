@@ -37,7 +37,7 @@ const App = () => {
         setShowAllNames(false);
     }
 
-    const getID = (n) => {
+    const checkName = (n) => {
         return persons.find((person) => {
             return person.name.toLocaleLowerCase() === n.toLocaleLowerCase();
         }) === undefined ? true : false;
@@ -49,9 +49,10 @@ const App = () => {
             name: newName,
             number: newNumber
         }
-        const id = getID(newPerson.name);
 
-        if (id) {
+        const name = checkName(newPerson.name);
+
+        if (name) {
             servisePersons.create(newPerson)
                 .then(() => {
                     setPersons(persons.concat(newPerson));
@@ -59,31 +60,37 @@ const App = () => {
 
             setNewName("");
             setNewNumber("");
+            setFilterName("");
         }
 
         else {
-            const personToUpdate = persons.find((person) => {
-                return person.name === newPerson.name;
-            });
-
-            const updatedPerson = {
-                ...personToUpdate,
-                number: newPerson.number
-            }
-
-            const response = window.confirm(`${updatedPerson.name} exists. Do you want to update the number?`);
-            if (response) {
-                servisePersons.update(updatedPerson.id, updatedPerson)
-                    .then((updated) => {
-                        setPersons(persons.map((person) => {
-                            return person.id !== updated.id ? person : updated;
-                        }));
-                    });
-                setNewName('');
-                setNewNumber('');
-            }
-            else return;
+            updateNumber(newPerson);
         }
+    }
+
+    const updateNumber = (person) => {
+        const personToUpdate = persons.find((p) => {
+            return p.name === person.name;
+        });
+
+        const updatedPerson = {
+            ...personToUpdate,
+            number: person.number
+        }
+
+        const response = window.confirm(`${updatedPerson.name} exists. Do you want to update the number?`);
+        if (response) {
+            servisePersons.update(updatedPerson.id, updatedPerson)
+                .then((updated) => {
+                    setPersons(persons.map((person) => {
+                        return person.id !== updated.id ? person : updated;
+                    }));
+                });
+            setNewName('');
+            setNewNumber('');
+            setFilterName('');
+        }
+        else return;
     }
 
     const deletePerson = (id) => {
