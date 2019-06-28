@@ -65,9 +65,8 @@ const App = () => {
 
             setNotificationType('green');
             setNotification(`${newPerson.name} has been successfully added to the list.`);
-            setNewName("");
-            setNewNumber("");
-            setFilterName("");
+
+            setAllStatesToDefault();
 
             setTimeout(() => {
                 setNotification(null);
@@ -99,9 +98,7 @@ const App = () => {
                     }));
                 });
 
-            setNewName('');
-            setNewNumber('');
-            setFilterName('');
+            setAllStatesToDefault();
         }
         else return;
     }
@@ -117,18 +114,24 @@ const App = () => {
                 });
                 setPersons(updatedPersons);
             })
-            .catch((error) => {
-                setNotificationType('red');
-                setNotification(`${name} has already been deleted.`);
-                setTimeout(() => {
-                    setNotification(null);
-                },5000);
-                setPersons(persons.filter((person) => {
-                    return person.id!== id;
-                }));
-            });
+                .catch((error) => {
+                    setNotificationType('red');
+                    setNotification(`${name} has already been deleted.`);
+                    setTimeout(() => {
+                        setNotification(null);
+                    }, 5000);
+                    setPersons(persons.filter((person) => {
+                        return person.id !== id;
+                    }));
+                });
         }
         else return;
+    }
+
+    const setAllStatesToDefault = () => {
+        setNewName('');
+        setNewNumber('');
+        setFilterName('');
     }
 
 
@@ -141,7 +144,7 @@ const App = () => {
     return (
         <div>
             <h2>Phonebook</h2>
-            <Notification message={notification} colortype={notificationType}/>
+            <Notification message={notification} colortype={notificationType} />
             <Filter value={filterName} handler={filterByName} />
             <h3>Add a new contact</h3>
             <PersonsForm addPerson={addPerson} newName={newName} changeNameInput={changeNameInput} newNumber={newNumber}

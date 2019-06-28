@@ -10,7 +10,6 @@ const Notification = ({message, colortype}) => {
             <p>{message}</p>
         </div>
     );
-
 };
 
 export default Notification
