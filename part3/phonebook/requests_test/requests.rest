@@ -1,0 +1,14 @@
+delete http://localhost:3001/api/persons/1
+content-type: application/json
+
+###
+get http://localhost:3001/api/persons
+
+###
+post http://localhost:3001/api/persons
+content-type: application/json
+
+{
+    "name" : "Ivan Lytovka1",
+    "number": "111-222-333"
+}
