@@ -2,8 +2,11 @@ const express = require("express");
 const app = express();
 const bodyParser = require('body-parser');
 const morgan = require("morgan");
+const cors = require("cors");
 
 app.use(bodyParser.json());
+app.use(cors());
+app.use(express.static("build"));
 
 morgan.token("info", (req) => {
     return JSON.stringify(req.body);
@@ -89,6 +92,10 @@ app.post("/api/persons", (req, res) => {
     res.json(phonebook);
 });
 
+app.put("/api/persons/:id", (req, res) => {
+    console.log('hellow');
+});
+
 app.delete("/api/persons/:id", (req, res) => {
     const id = Number(req.params.id);
     contact = phonebook.find((n) => {
@@ -106,7 +113,7 @@ app.delete("/api/persons/:id", (req, res) => {
     }
 });
 
-const port = 3001;
-app.listen(port, () => {
-    console.log('running on', port);
+const PORT = process.env.PORT || 3001;
+app.listen(PORT, () => {
+    console.log('running on', PORT);
 });
