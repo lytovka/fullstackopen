@@ -5,10 +5,13 @@ content-type: application/json
 get http://localhost:3001/api/persons
 
 ###
+get http://localhost:3001/api/persons/5d253d7a62a80b7e8dd49c5a
+
+###
 post http://localhost:3001/api/persons
 content-type: application/json
 
 {
-    "name" : "Ivan Lytovka1",
-    "number": "111-222-333"
+    "name" : "Michael",
+    "number": "3242-432-566"
 }

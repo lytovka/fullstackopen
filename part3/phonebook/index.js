@@ -1,8 +1,10 @@
+require('dotenv').config({ path: 'entry.env' });
 const express = require("express");
 const app = express();
 const bodyParser = require('body-parser');
 const morgan = require("morgan");
 const cors = require("cors");
+const Contact = require('./models/phonebook');
 
 app.use(bodyParser.json());
 app.use(cors());
@@ -13,83 +15,48 @@ morgan.token("info", (req) => {
 });
 app.use(morgan(':method :url :response-time :info'));
 
-let phonebook = [
-    {
-      name: "Arto Hellas",
-      number: "040-123456",
-      id: 1
-    },
-    {
-      name: "Ada Lovelace",
-      number: "39-44-5323523",
-      id: 2
-    },
-    {
-      name: "Dan Abramov",
-      number: "12-43-234345",
-      id: 3
-    },
-    {
-      name: "Mary Poppendieck",
-      number: "39-23-6423122",
-      id: 4
-    }
-];
-
 app.get('/', (req, res) => {
     res.send("<h1>Hop-hey la la ley</h1>")
 });
 
 app.get('/info', (req, res) => {
-    res.write(`<p>This phonebook has ${phonebook.length} people</p>`);
-    res.write(`<p>${new Date()}</p>`);
-    res.end();
+    Contact.find({}).then(phonebook => {
+        res.write(`<p>This phonebook has ${phonebook.length} people</p>`);
+        res.write(`<p>${new Date()}</p>`);
+        res.end();
+    });
 });
 
 app.get('/api/persons', (req, res) => {
-    res.json(phonebook);
+    Contact.find({}).then(phonebook => {
+        res.json(phonebook.map(person => {
+            return person.toJSON()
+        }));
+    });
 });
 
 app.get('/api/persons/:id', (req, res) => {
-    const id = Number(req.params.id);
-    const contact = phonebook.find((n) => {
-        return n.id === id;
+    Contact.findById(req.params.id).then(contact => {
+        res.json(contact.toJSON());
     });
-
-    if (!contact) {
-        res.status(404).send("<h1>Ooops</h1>").end();
-    }
-    else {
-        res.json(contact);
-    }
 });
-
-const isNameExist = (name) => {
-    return phonebook.find((n) => {
-        return n.name === name;
-    }) === undefined ? false : true;
-}
 
 app.post("/api/persons", (req, res) => {
     const body = req.body;
-    if(!body.name || !body.number){
+    if (!body.name || !body.number) {
         return res.status(400).json({
             error: "content missing"
         });
     }
-    if(isNameExist(body.name)){
-        return res.status(400).json({
-            error: "this contact already exists"
-        });
-    }
-    const contact = { 
+    const contact = new Contact({
         name: body.name,
-        number: body.number,
-        id: Math.floor(Math.random()*100000),
-    }
+        number: body.number
+    });
 
-    phonebook = phonebook.concat(contact);
-    res.json(phonebook);
+    contact.save().then(savedContact => {
+        res.json(savedContact.toJSON());
+    });
+    res.json(contact);
 });
 
 app.put("/api/persons/:id", (req, res) => {
