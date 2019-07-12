@@ -37,8 +37,14 @@ app.get('/api/persons', (req, res) => {
 
 app.get('/api/persons/:id', (req, res) => {
     Contact.findById(req.params.id).then(contact => {
-        res.json(contact.toJSON());
-    });
+        if(contact){
+            res.json(contact.toJSON());
+        }
+        else{
+            res.status(404).end();
+        }
+    })
+    .catch((error) => next(error));
 });
 
 app.post("/api/persons", (req, res) => {
@@ -60,25 +66,36 @@ app.post("/api/persons", (req, res) => {
 });
 
 app.put("/api/persons/:id", (req, res) => {
-    console.log('hellow');
+
+    const contact = {
+        name: req.body.name,
+        number: req.body.number
+    }
+
+    Contact.findByIdAndUpdate(req.params.id, contact, {new: true})
+    .then(updatedContact => {
+        res.json(updatedContact.toJSON());
+    })
+    .catch(error => next(error));
 });
 
 app.delete("/api/persons/:id", (req, res) => {
-    const id = Number(req.params.id);
-    contact = phonebook.find((n) => {
-        return n.id === id;
-    });
-
-    if (!contact) {
-        res.status(404).send("<p>Can't find the contact</p>").end();
-    }
-    else {
-        phonebook = phonebook.filter((n) => {
-            return n.id !== id;
-        });
+    Contact.findByIdAndDelete(req.params.id).then(result => {
         res.status(204).end();
-    }
+    })
+    .catch(error => next(error));
 });
+
+const errorHandler = (error, request, response, next) => {
+    console.error(error.message)
+  
+    if (error.name === 'CastError' && error.kind == 'ObjectId') {
+      return response.status(400).send({ error: 'malformatted id' })
+    } 
+    next(error)
+  }
+  
+  app.use(errorHandler)
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
