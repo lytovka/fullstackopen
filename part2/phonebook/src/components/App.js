@@ -61,17 +61,15 @@ const App = () => {
             servisePersons.create(newPerson)
                 .then(() => {
                     setPersons(persons.concat(newPerson));
+                    setNotificationType('green');
+                    setNotification(`${newPerson.name} has been successfully added to the list.`);
+                    setTimeout(() => {
+                        setNotification(null);
+                        setNotificationType("black");
+                    }, 5000);
                 });
 
-            setNotificationType('green');
-            setNotification(`${newPerson.name} has been successfully added to the list.`);
-
             setAllStatesToDefault();
-
-            setTimeout(() => {
-                setNotification(null);
-                setNotificationType("black");
-            }, 5000);
         }
 
         else {
