@@ -67,7 +67,15 @@ const App = () => {
                         setNotification(null);
                         setNotificationType("black");
                     }, 5000);
-                });
+                })
+                .catch(error => {
+                    setNotificationType('red');
+                    setNotification(`${newPerson.name} has too short name`);
+                    setTimeout(() => {
+                        setNotification(null);
+                        setNotificationType("black");
+                    }, 5000);
+                })
 
             setAllStatesToDefault();
         }
