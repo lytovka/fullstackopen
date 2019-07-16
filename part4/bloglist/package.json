@@ -9,13 +9,19 @@
     "express": "^4.17.1",
     "mongoose": "^5.6.4"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "jest": "^24.8.0"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest --verbose"
   },
   "keywords": [
     "blog"
   ],
   "author": "Ivan Lytovka",
-  "license": "ISC"
+  "license": "ISC",
+
+  "jest": {
+    "testEnvironment":"node"
+  }
 }
