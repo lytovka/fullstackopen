@@ -153,6 +153,7 @@ describe("Most favourite blogs", () => {
     const res = favoriteBlog(blogs.map(blog => blog.likes))
     expect(blogs.find(blog => blog.likes === res)).toEqual(blogs[2])
   })
+  
 })
 
 describe("Most popular author", () => {
