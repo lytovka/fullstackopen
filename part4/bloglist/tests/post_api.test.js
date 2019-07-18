@@ -52,6 +52,43 @@ describe("Testing backend", () => {
         const numBlogs = await helper.blogsInDB()
         expect(numBlogs.length).toBe(helper.initialBlogs.length+1)
     })
+    test("POST request without likes property", async () => {
+        const newBlog = {
+            title: "testing blog",
+            author: "John Fedor",
+            url: "jf.com"
+        }
+        await api.post('/api/blogs')
+        .send(newBlog)
+        .expect(201)
+        .expect('Content-Type', /application\/json/)
+        
+        const allBlogs = await helper.blogsInDB()
+        expect(allBlogs[allBlogs.length-1].likes).toBe(0)
+    })
+    test("POST request without likes property", async () => {
+        const newBlog = {
+            title: "testing blog",
+            author: "John Fedor",
+            url: "jf.com"
+        }
+        await api.post('/api/blogs')
+        .send(newBlog)
+        .expect(201)
+        .expect('Content-Type', /application\/json/)
+        
+        const allBlogs = await helper.blogsInDB()
+        expect(allBlogs[allBlogs.length-1].likes).toBe(0)
+    })
+    test("an empty POST request", async () => {
+        const newBlog = {}
+        await api.post('/api/blogs')
+        .send(newBlog)
+        .expect(400)
+        
+        const allBlogs = await helper.blogsInDB()
+        expect(allBlogs.length).toBe(allBlogs.length)
+    })
 })
 
 afterAll(() => {

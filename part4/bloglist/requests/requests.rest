@@ -2,7 +2,7 @@ get http://localhost:3003/api/blogs
 
 ###
 
-get http://localhost:3003/api/blogs/5d2d5830e795da1f680ae830
+get http://localhost:3003/api/blogs/5d30ad8da91bcb15b4b15a02
 
 ###
 
@@ -10,8 +10,11 @@ post http://localhost:3003/api/blogs
 Content-Type: application/json
 
 {
-    "title": "New post from another author",
-    "author": "Tanya",
-    "url": "tanya.com",
-    "likes":35
+    "title": "New post from me",
+    "author": "Vanya",
+    "url": ""
 }
+
+###
+
+delete http://localhost:3003/api/blogs/5d30ad8da91bcb15b4b15a04
