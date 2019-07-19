@@ -17,4 +17,16 @@ Content-Type: application/json
 
 ###
 
-delete http://localhost:3003/api/blogs/5d30ad8da91bcb15b4b15a04
+put http://localhost:3003/api/blogs/5d30ad8da91bcb15b4b15a02
+Content-Type: application/json
+
+{
+    "title": "New posts",
+    "author": "Ivan Lytovka",
+    "url": "lytovka.com",
+    "likes":54
+}
+
+###
+
+delete http://localhost:3003/api/blogs/aba
