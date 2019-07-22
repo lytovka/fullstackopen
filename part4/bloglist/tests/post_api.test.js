@@ -2,6 +2,7 @@ const mongoose = require('mongoose')
 const supertest = require('supertest')
 const helper = require('./helper')
 const Blog = require('../models/post')
+const User = require('../models/user')
 const app = require('../app')
 
 const api = supertest(app)
@@ -45,12 +46,12 @@ describe("Testing backend", () => {
             likes: 100
         }
         await api.post('/api/blogs')
-        .send(newBlog)
-        .expect(201)
-        .expect('Content-Type', /application\/json/)
+            .send(newBlog)
+            .expect(201)
+            .expect('Content-Type', /application\/json/)
 
         const numBlogs = await helper.blogsInDB()
-        expect(numBlogs.length).toBe(helper.initialBlogs.length+1)
+        expect(numBlogs.length).toBe(helper.initialBlogs.length + 1)
     })
     test("POST request without likes property", async () => {
         const newBlog = {
@@ -59,12 +60,12 @@ describe("Testing backend", () => {
             url: "jf.com"
         }
         await api.post('/api/blogs')
-        .send(newBlog)
-        .expect(201)
-        .expect('Content-Type', /application\/json/)
-        
+            .send(newBlog)
+            .expect(201)
+            .expect('Content-Type', /application\/json/)
+
         const allBlogs = await helper.blogsInDB()
-        expect(allBlogs[allBlogs.length-1].likes).toBe(0)
+        expect(allBlogs[allBlogs.length - 1].likes).toBe(0)
     })
     test("POST request without likes property", async () => {
         const newBlog = {
@@ -73,21 +74,51 @@ describe("Testing backend", () => {
             url: "jf.com"
         }
         await api.post('/api/blogs')
-        .send(newBlog)
-        .expect(201)
-        .expect('Content-Type', /application\/json/)
-        
+            .send(newBlog)
+            .expect(201)
+            .expect('Content-Type', /application\/json/)
+
         const allBlogs = await helper.blogsInDB()
-        expect(allBlogs[allBlogs.length-1].likes).toBe(0)
+        expect(allBlogs[allBlogs.length - 1].likes).toBe(0)
     })
     test("an empty POST request", async () => {
         const newBlog = {}
         await api.post('/api/blogs')
-        .send(newBlog)
-        .expect(400)
-        
+            .send(newBlog)
+            .expect(400)
+
         const allBlogs = await helper.blogsInDB()
         expect(allBlogs.length).toBe(allBlogs.length)
+    })
+})
+
+describe('when there is initially one user at db', () => {
+    beforeEach(async () => {
+        await User.deleteMany({})
+        const user = new User({ username: 'user', name: 'User', password: 'Aa11111111' })
+        await user.save()
+    })
+
+    test('creation succeeds with a fresh username', async () => {
+        const usersAtStart = await helper.usersInDB()
+
+        const newUser = {
+            username: 'lytovka',
+            name: 'Ivan Lytovka',
+            password: 'Aa11111111',
+        }
+
+        await api
+            .post('/api/users')
+            .send(newUser)
+            .expect(200)
+            .expect('Content-Type', /application\/json/)
+
+        const usersAtEnd = await helper.usersInDB()
+        expect(usersAtEnd.length).toBe(usersAtStart.length + 1)
+
+        const usernames = usersAtEnd.map(u => u.username)
+        expect(usernames).toContain(newUser.username)
     })
 })
 

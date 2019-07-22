@@ -30,3 +30,32 @@ Content-Type: application/json
 ###
 
 delete http://localhost:3003/api/blogs/aba
+
+###
+
+get http://localhost:3003/api/users/
+
+###
+
+post http://localhost:3003/api/blogs/
+Content-Type: application/json
+
+{
+    "userId": "5d35f3456cfd46460481ec26",
+    "title": "Test post number 2",
+    "author": " Ivan Lytovka",
+    "url": "lytovka.com",
+    "likes":10
+}
+
+
+###
+
+post http://localhost:3003/api/users/
+Content-Type: application/json
+
+{
+    "username": "tanya",
+    "name": "Tanya",
+    "password": "Aaaaaaa"
+}
