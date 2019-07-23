@@ -39,11 +39,12 @@ get http://localhost:3003/api/users/
 
 post http://localhost:3003/api/blogs/
 Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Imx5dG92a2EiLCJpZCI6IjVkMzVmMzQ1NmNmZDQ2NDYwNDgxZWMyNiIsImlhdCI6MTU2Mzg0MTU4OH0.6JHfw5-mDReUsO1Aiy58nLbrCA0Nxjk9xqKxUbBmy30
 
 {
     "userId": "5d35f3456cfd46460481ec26",
-    "title": "Test post number 2",
-    "author": " Ivan Lytovka",
+    "title": "Test post number 3",
+    "author": "Ivan Lytovka",
     "url": "lytovka.com",
     "likes":10
 }
@@ -55,9 +56,9 @@ post http://localhost:3003/api/users/
 Content-Type: application/json
 
 {
-    "username": "tanya",
-    "name": "Tanya",
-    "password": "Aaaaaaa"
+    "username": "C",
+    "name": "Carl Johnson",
+    "password": "123"
 }
 
 ###
