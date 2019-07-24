@@ -94,8 +94,8 @@ blogsRouter.delete('/:id', async (request, response) => {
         if (!request.token || !decodedToken.id) {
             return response.status(401).json({ error: "Token was malformed or not found" })
         }
-        // await Blog.findByIdAndDelete(request.params.id)
-        const blog = await Blog.findById(body.userId)
+
+        const blog = await Blog.findById(request.params.id)
         if(blog.user.toString() === body.userId){
             await blog.delete()
             return response.status(204).json({message: "The post has been sucessfully deleted"})
