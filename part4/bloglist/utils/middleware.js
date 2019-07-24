@@ -1,3 +1,11 @@
+const getTokenFrom = request => {
+    const authorization = request.get('authorization')
+    if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
+        return authorization.substring(7)
+    }
+    return next()
+}
+
 const unknownEndpoint = (request, response) => {
     response.status(404).send({ error: 'unknown endpoint' })
 }
@@ -20,4 +28,8 @@ const errorHandler = (error, request, response, next) => {
     logger.error(error.message)
 
     next(error)
+}
+
+module.exports = { 
+    getTokenFrom
 }

@@ -39,16 +39,16 @@ blogsRouter.get('/:id', async (request, response) => {
 
 blogsRouter.post('/', async (request, response, next) => {
     const body = request.body
-
-    const token = getTokenFrom(request)
-
+    request.token = getTokenFrom(request)
+    console.log(request.token)
     try {
-        const decodedToken = jwt.verify(token, process.env.SECRET)
-        if (!token || !decodedToken.id) {
+        const decodedToken = jwt.verify(request.token, process.env.SECRET)
+        if (!request.token || !decodedToken.id) {
             return response.status(401).json({ error: 'token missing or invalid' })
         }
-        
+
         const user = await User.findById(body.userId)
+        console.log(body.userId)
         const blog = new Blog({
             user: user.id,
             author: body.author,
@@ -62,7 +62,7 @@ blogsRouter.post('/', async (request, response, next) => {
         }
 
         const savedBlog = await blog.save()
-        user.notes = user.notes.concat(savedBlog.id)
+        user.blogs = user.blogs.concat(savedBlog.id)
         await user.save()
         response.status(201).json(savedBlog)
     }
@@ -86,9 +86,20 @@ blogsRouter.put('/:id', async (request, response) => {
 })
 
 blogsRouter.delete('/:id', async (request, response) => {
+    const body = request.body
+    request.token = getTokenFrom(request)
+
     try {
-        await Blog.findByIdAndDelete(request.params.id)
-        response.status(204)
+        const decodedToken = jwt.verify(request.token, process.env.SECRET)
+        if (!request.token || !decodedToken.id) {
+            return response.status(401).json({ error: "Token was malformed or not found" })
+        }
+        // await Blog.findByIdAndDelete(request.params.id)
+        const blog = await Blog.findById(body.userId)
+        if(blog.user.toString() === body.userId){
+            await blog.delete()
+            return response.status(204).json({message: "The post has been sucessfully deleted"})
+        }
     }
     catch (ex) {
         response.status(400).end()
