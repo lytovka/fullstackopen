@@ -96,6 +96,7 @@ blogsRouter.delete('/:id', async (request, response) => {
         }
 
         const blog = await Blog.findById(request.params.id)
+        // console.log(blog.user.toString(), body.userId)
         if(blog.user.toString() === body.userId){
             await blog.delete()
             return response.status(204).json({message: "The post has been sucessfully deleted"})
