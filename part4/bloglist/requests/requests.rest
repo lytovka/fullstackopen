@@ -35,14 +35,12 @@ get http://localhost:3003/api/users/
 
 post http://localhost:3003/api/blogs/
 Content-Type: application/json
-Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ik1hcmlhIiwiaWQiOiI1ZDM3NzhmNjYyMzgzMzMxN2M2ODIzODgiLCJpYXQiOjE1NjQwNzc1NTB9.h1ub98psmT02muOEuRxRI59NcUjms_D2aXs-QaQpvRk
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ik1hcmlhIiwiaWQiOiI1ZDM3NzhmNjYyMzgzMzMxN2M2ODIzODgiLCJpYXQiOjE1NjQwOTUwNzB9.a-XZYLbmIaRRRAiEr0E-43ezEtj5VKIyTA26veU5szI
 
 {
-    "userId": "5d3778f6623833317c682388",
-    "title": "What I forgot to do today",
+    "title": "These bugs are so annoying!!!",
     "author": "Maria Black",
     "url": "maria.com",
-    "likes":120
 }
 
 
