@@ -7,6 +7,7 @@ import serviceUsers from './services/users'
 import Input from './components/Input'
 import Blog from './components/Blog'
 import Notification from './components/Notification'
+import LoginForm from './components/LoginForm';
 
 
 const App = () => {
@@ -17,6 +18,8 @@ const App = () => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [URL, setURL] = useState('')
+
+  const [loginVisible, setLoginVisible] = useState(false)
 
   const [notification, setNotification] = useState(null);
   const [notificationType, setNotificationType] = useState('');
@@ -108,28 +111,30 @@ const App = () => {
     return;
   }
 
-  const loginForm = () => (
-    <>
-      <div>
-        <h1>Sign in</h1>
-        <form onSubmit={handleLogin}>
-          <div>
-            <input type="text" value={username} placeholder="username" onChange={({ target }) => setUsername(target.value)} />
+  const loginForm = () => {
+
+    const hideWhenVisible = { display: loginVisible ? 'none' : '' }
+    const showWhenVisible = { display: loginVisible ? '' : 'none' }
+
+
+    return (
+      <>
+        <div>
+          <div style={hideWhenVisible}>
+            <button onClick={() => setLoginVisible(true)}>sign in</button>
           </div>
-          <div>
-            <input
-              type="password"
-              value={password}
-              name="Password"
-              onChange={({ target }) => setPassword(target.value)}
-              placeholder="password"
-            />
+          <div style={showWhenVisible}>
+            <LoginForm handleSubmit={handleLogin}
+              handleUsernameChange={({ target }) => setUsername(target.value)}
+              handlePasswordChange={({ target }) => setPassword(target.value)}
+              username={username}
+              password={password} />
           </div>
-          <button type="submit">Sign in</button>
-        </form>
-      </div>
-    </>
-  )
+        </div>
+      </>
+    )
+  }
+
 
   const rows = () => blogsToShow.map(blog =>
     <Blog key={blog.id} blog={blog} />
@@ -157,22 +162,6 @@ const App = () => {
       </div>
     </>
   )
-
-
-  // if (user === null) {
-  //   return (
-  //     <>
-  //       {loginForm()}
-  //     </>
-  //   )
-  // }
-  // else {
-  //   return (
-  //     <>
-  //       {blogsForm(user)}
-  //     </>
-  //   )
-  // }
 
   return (
     <>
