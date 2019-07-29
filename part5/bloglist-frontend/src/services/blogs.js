@@ -20,4 +20,19 @@ const publish = async (newBlog) => {
   return response.data
 }
 
-export default { getAll, publish, setToken }
+const putLike = async (newBlog, id) => {
+  const response = await axios.put(`${baseUrl}/${id}`, newBlog)
+  return response.data
+}
+
+const deletePost = async(blogId, userId) => {
+  const config = { 
+    headers: {Authorization: token},
+    data: {userId: userId}
+  }
+
+  const response = await axios.delete(`${baseUrl}/${blogId}`,config)
+  return response.data
+}
+
+export default { getAll, publish, putLike, deletePost,setToken }

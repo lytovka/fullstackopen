@@ -34,9 +34,10 @@ const App = () => {
     }
   }, [])
 
-  const blogsToShow = user === null ? [] : blogs.filter(blog => user.username === blog.author || user.name === blog.author)
-
-  console.log(user)
+  const blogsToShow = user === null ?
+    [] :
+    blogs.filter(blog => user.username === blog.author || user.name === blog.author)
+      .sort((a, b) => b.likes - a.likes)
 
   const handleLogin = async (event) => {
     event.preventDefault()
@@ -123,9 +124,12 @@ const App = () => {
   }
 
 
-  const rows = () => blogsToShow.map(blog =>
-    <Blog key={blog.id} blog={blog} />
-  )
+  const rows = () => {
+    return blogsToShow.map(blog =>
+      <Blog key={blog.id} blog={blog} />
+    )
+      .sort((a, b) => a.likes - b.likes)
+  }
 
   const blogsForm = (user) => (
     <>
