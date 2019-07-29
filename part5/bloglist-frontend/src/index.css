@@ -6,4 +6,15 @@
     padding: 10px;
     margin-bottom: 10px;
 }
+
+.blog{
+    margin: 0;
+    padding: 0.5rem 0;
+    border: 2px black solid;
+    border-radius: 10px
+}
+
+.blog:hover{
+    background-color: aqua;
+}
   

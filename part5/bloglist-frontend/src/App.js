@@ -3,11 +3,11 @@ import '../src/index.css'
 
 import loginService from './services/login'
 import serviceBlogs from './services/blogs'
-import serviceUsers from './services/users'
 import Input from './components/Input'
 import Blog from './components/Blog'
 import Notification from './components/Notification'
 import LoginForm from './components/LoginForm';
+import Togglable from './components/Togglable'
 
 
 const App = () => {
@@ -18,8 +18,6 @@ const App = () => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [URL, setURL] = useState('')
-
-  const [loginVisible, setLoginVisible] = useState(false)
 
   const [notification, setNotification] = useState(null);
   const [notificationType, setNotificationType] = useState('');
@@ -37,10 +35,6 @@ const App = () => {
   }, [])
 
   const blogsToShow = user === null ? [] : blogs.filter(blog => user.username === blog.author || user.name === blog.author)
-
-  // const blogsToShow = user === null ? [] : blogs.filter((blog) => {
-  //   return user.id === blog.user.id
-  // })
 
   console.log(user)
 
@@ -113,24 +107,17 @@ const App = () => {
 
   const loginForm = () => {
 
-    const hideWhenVisible = { display: loginVisible ? 'none' : '' }
-    const showWhenVisible = { display: loginVisible ? '' : 'none' }
-
-
     return (
       <>
-        <div>
-          <div style={hideWhenVisible}>
-            <button onClick={() => setLoginVisible(true)}>sign in</button>
-          </div>
-          <div style={showWhenVisible}>
+        <Togglable buttonLabel={"sign in"}>
+          <div>
             <LoginForm handleSubmit={handleLogin}
               handleUsernameChange={({ target }) => setUsername(target.value)}
               handlePasswordChange={({ target }) => setPassword(target.value)}
               username={username}
               password={password} />
           </div>
-        </div>
+        </Togglable>
       </>
     )
   }
@@ -145,16 +132,17 @@ const App = () => {
       <div>
         <h2>{user.name} <button onClick={signOut}>Sign out</button></h2>
       </div>
-
-      <div>
-        <h3>Make a new blog</h3>
-        <form onSubmit={publishBlog}>
-          <Input name={"title"} placeholder={"Title"} onChangeFunc={onChangeTitle} />
-          <Input name={"author"} placeholder={"Author"} onChangeFunc={onChangeAuthor} />
-          <Input name={"URL"} placeholder={"URL"} onChangeFunc={onChangeURL} />
-          <button type="submit">Publish</button>
-        </form>
-      </div>
+      <Togglable buttonLabel={"new blog"}>
+        <div>
+          <h3>Make a new blog</h3>
+          <form onSubmit={publishBlog}>
+            <Input name={"title"} placeholder={"Title"} onChangeFunc={onChangeTitle} />
+            <Input name={"author"} placeholder={"Author"} onChangeFunc={onChangeAuthor} />
+            <Input name={"URL"} placeholder={"URL"} onChangeFunc={onChangeURL} />
+            <button type="submit">Publish</button>
+          </form>
+        </div>
+      </Togglable>
 
       <h2>All posts</h2>
       <div>
@@ -165,6 +153,7 @@ const App = () => {
 
   return (
     <>
+
       <Notification message={notification} colortype={notificationType} />
       {user === null ? loginForm() : blogsForm(user)}
     </>
