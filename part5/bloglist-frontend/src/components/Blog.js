@@ -2,12 +2,11 @@ import React, { useState } from 'react'
 import serviceBlog from '../services/blogs'
 import '../index.css'
 
-const Blog = ({ blog }) => {
+const Blog = ({ blog, enableRemoveButton }) => {
   const [likes, setLikes] = useState(blog.likes)
   const [expandedBlog, setExpandedBlog] = useState(false)
   const showFullBlog = { display: expandedBlog ? '' : 'none' }
   const hideFullBlog = { display: expandedBlog ? 'none' : '' }
-
   const toggleBlogExpansion = () => {
     setExpandedBlog(!expandedBlog)
   }
@@ -48,7 +47,7 @@ const Blog = ({ blog }) => {
       </div>
       <div style={showFullBlog}>
         <button onClick={toggleBlogExpansion}>hide</button>
-        <button onClick={() => deleteBlog(blog.id, blog.user.id)}>remove</button>
+        {!enableRemoveButton && <button onClick={() => deleteBlog(blog.id, blog.user.id)}>remove</button>}
       </div>
       <div style={hideFullBlog}>
         <button onClick={toggleBlogExpansion}>show more</button>

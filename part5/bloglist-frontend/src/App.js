@@ -123,10 +123,9 @@ const App = () => {
     )
   }
 
-
-  const rows = () => {
+  const rows = (user) => {
     return blogsToShow.map(blog =>
-      <Blog key={blog.id} blog={blog} />
+      <Blog key={blog.id} blog={blog} enableRemoveButton={blog.user.id === user.id ? true : false}/>
     )
       .sort((a, b) => a.likes - b.likes)
   }
@@ -150,14 +149,13 @@ const App = () => {
 
       <h2>All posts</h2>
       <div>
-        {rows()}
+        {rows(user)}
       </div>
     </>
   )
 
   return (
     <>
-
       <Notification message={notification} colortype={notificationType} />
       {user === null ? loginForm() : blogsForm(user)}
     </>
