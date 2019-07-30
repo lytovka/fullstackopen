@@ -7,14 +7,14 @@ get http://localhost:3003/api/blogs/5d387898e30d8011b4b901cc
 
 ###
 
-put http://localhost:3003/api/blogs/5d30ad8da91bcb15b4b15a02
+put http://localhost:3003/api/blogs/5d3601393171fd1924df5f4f
 Content-Type: application/json
 
 {
-    "title": "New posts",
+    "title": "Test post",
     "author": "Ivan Lytovka",
     "url": "lytovka.com",
-    "likes":54
+    "likes":56
 }
 
 ###
