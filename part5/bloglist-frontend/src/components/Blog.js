@@ -1,39 +1,40 @@
-import React, { useState } from 'react'
-import serviceBlog from '../services/blogs'
-import '../index.css'
+import React, { useState } from "react";
+import serviceBlog from "../services/blogs";
+import PropTypes from "prop-types";
+import "../index.css";
 
 const Blog = ({ blog, enableRemoveButton }) => {
-  const [likes, setLikes] = useState(blog.likes)
-  const [expandedBlog, setExpandedBlog] = useState(false)
-  const showFullBlog = { display: expandedBlog ? '' : 'none' }
-  const hideFullBlog = { display: expandedBlog ? 'none' : '' }
+  const [likes, setLikes] = useState(blog.likes);
+  const [expandedBlog, setExpandedBlog] = useState(false);
+  const showFullBlog = { display: expandedBlog ? "" : "none" };
+  const hideFullBlog = { display: expandedBlog ? "none" : "" };
   const toggleBlogExpansion = () => {
-    setExpandedBlog(!expandedBlog)
-  }
-  
+    setExpandedBlog(!expandedBlog);
+  };
+
   const likeButton = async (blog, id) => {
     try {
-      await serviceBlog.putLike(blog, id)
-      setLikes(likes + 1)
+      await serviceBlog.putLike(blog, id);
+      setLikes(likes + 1);
     }
     catch (ex) {
-      console.log("couldn't update likes", ex)
+      console.log("couldn't update likes", ex);
     }
-  }
+  };
 
   const deleteBlog = async (blogId, userId) => {
-    console.log('test', blogId)
-    const response = window.confirm(`Delete this post?`);
+    console.log("test", blogId);
+    const response = window.confirm("Delete this post?");
     if (response) {
       try {
-        await serviceBlog.deletePost(blogId, userId)
-        window.location.reload()
+        await serviceBlog.deletePost(blogId, userId);
+        window.location.reload();
       }
       catch (ex) {
-        console.log("can't delete the post", ex)
+        console.log("can't delete the post", ex);
       }
     }
-  }
+  };
 
   return (
     <div className="blog">
@@ -53,6 +54,12 @@ const Blog = ({ blog, enableRemoveButton }) => {
         <button onClick={toggleBlogExpansion}>show more</button>
       </div>
     </div>
-  )
-}
-export default Blog
+  );
+};
+
+Blog.propTypes = {
+  blog: PropTypes.object.isRequired,
+  enableRemoveButton: PropTypes.bool.isRequired
+};
+
+export default Blog;
