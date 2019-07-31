@@ -40,17 +40,17 @@ const Blog = ({ blog, enableRemoveButton }) => {
     <div className="blog">
       <div>
         <p>{blog.title}</p>
-        <div style={showFullBlog}>
+        <div className="showFullBlog" style={showFullBlog}>
           <p>{blog.author}</p>
           <p>{blog.url}</p>
           <p>{likes} <button onClick={() => likeButton({ "title": blog.title, "author": blog.author, "url": blog.url, "likes": blog.likes }, blog.id)}>like</button></p>
+          <div style={showFullBlog}>
+            <button onClick={toggleBlogExpansion}>hide</button>
+            {!enableRemoveButton && <button onClick={() => deleteBlog(blog.id, blog.user.id)}>remove</button>}
+          </div>
         </div>
       </div>
-      <div style={showFullBlog}>
-        <button onClick={toggleBlogExpansion}>hide</button>
-        {!enableRemoveButton && <button onClick={() => deleteBlog(blog.id, blog.user.id)}>remove</button>}
-      </div>
-      <div style={hideFullBlog}>
+      <div className="hideFullBlog" style={hideFullBlog}>
         <button onClick={toggleBlogExpansion}>show more</button>
       </div>
     </div>
