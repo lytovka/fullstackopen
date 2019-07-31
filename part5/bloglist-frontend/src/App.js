@@ -110,7 +110,7 @@ const App = () => {
 
     return (
       <>
-        <Togglable buttonLabel={"sign in"}>
+        <Togglable buttonLabel={"Sign in"}>
           <div>
             <LoginForm handleSubmit={handleLogin}
               handleUsernameChange={({ target }) => setUsername(target.value)}
