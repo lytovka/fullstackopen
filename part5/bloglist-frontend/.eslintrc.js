@@ -4,7 +4,7 @@ module.exports = {
         "es6": true,
         "jest/globals": true
     },
-    "extends": [ 
+    "extends": [
         "eslint:recommended",
         "plugin:react/recommended"
     ],
@@ -16,9 +16,12 @@ module.exports = {
         "sourceType": "module"
     },
     "plugins": [
-        "react", "jest"
+        "react", "jest",
+        "react-hooks"
     ],
     "rules": {
+        "react-hooks/rules-of-hooks": "error",
+        "react-hooks/exhaustive-deps": "warn",
         "indent": [
             "error",
             2
@@ -46,4 +49,4 @@ module.exports = {
         "no-console": 0,
         "react/prop-types": 0
     }
-  };
+};

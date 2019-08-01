@@ -3,11 +3,14 @@ import "../src/index.css";
 
 import loginService from "./services/login";
 import serviceBlogs from "./services/blogs";
+
 import Input from "./components/Input";
 import Blog from "./components/Blog";
 import Notification from "./components/Notification";
 import LoginForm from "./components/LoginForm";
 import Togglable from "./components/Togglable";
+
+import {useFieldChange} from './hooks/index'
 
 
 const App = () => {
@@ -21,6 +24,9 @@ const App = () => {
 
   const [notification, setNotification] = useState(null);
   const [notificationType, setNotificationType] = useState("");
+
+  const usernameField = useFieldChange();
+  const passwordField = useFieldChange();
 
 
   useEffect(() => {
@@ -42,7 +48,11 @@ const App = () => {
   const handleLogin = async (event) => {
     event.preventDefault();
     try {
-      const userWithToken = await loginService.login({ username, password });
+      const credentials = {
+        username: usernameField.value,
+        password: passwordField.value
+      }
+      const userWithToken = await loginService.login(credentials);
       window.localStorage.setItem("signedUserToken", JSON.stringify(userWithToken));
       serviceBlogs.setToken(userWithToken.token);
 
@@ -113,10 +123,10 @@ const App = () => {
         <Togglable buttonLabel={"Sign in"}>
           <div>
             <LoginForm handleSubmit={handleLogin}
-              handleUsernameChange={({ target }) => setUsername(target.value)}
-              handlePasswordChange={({ target }) => setPassword(target.value)}
-              username={username}
-              password={password} />
+              handleUsernameChange={usernameField.onChange}
+              handlePasswordChange={passwordField.onChange}
+              username={usernameField.value}
+              password={passwordField.value} />
           </div>
         </Togglable>
       </>

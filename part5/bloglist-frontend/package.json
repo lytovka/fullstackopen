@@ -41,6 +41,7 @@
   "license": "ISC",
   "devDependencies": {
     "@testing-library/react": "^8.0.7",
-    "eslint-plugin-jest": "^22.14.0"
+    "eslint-plugin-jest": "^22.14.0",
+    "eslint-plugin-react-hooks": "^1.6.1"
   }
 }
