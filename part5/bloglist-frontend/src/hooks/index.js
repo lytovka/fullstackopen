@@ -7,9 +7,14 @@ export const useFieldChange = () => {
         setValue(event.target.value);
     }
 
+    const setToDefault = () => {
+        setValue("");
+    }
+
     return {
         value,
-        onChange
+        onChange,
+        setToDefault
     }
 }
 

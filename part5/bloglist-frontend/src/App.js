@@ -10,13 +10,11 @@ import Notification from "./components/Notification";
 import LoginForm from "./components/LoginForm";
 import Togglable from "./components/Togglable";
 
-import {useFieldChange} from './hooks/index'
+import { useFieldChange } from './hooks/index'
 
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
@@ -57,8 +55,8 @@ const App = () => {
       serviceBlogs.setToken(userWithToken.token);
 
       setUser(userWithToken);
-      setUsername("");
-      setPassword("");
+      usernameField.setToDefault();
+      passwordField.setToDefault();
     }
     catch (ex) {
       console.log(ex);
@@ -69,6 +67,7 @@ const App = () => {
         setNotificationType("black");
       }, 2000);
     }
+    passwordField.setToDefault();
   };
 
   const publishBlog = async (event) => {
@@ -135,7 +134,7 @@ const App = () => {
 
   const rows = (user) => {
     return blogsToShow.map(blog =>
-      <Blog key={blog.id} blog={blog} enableRemoveButton={blog.user.id === user.id ? true : false}/>
+      <Blog key={blog.id} blog={blog} enableRemoveButton={blog.user.id === user.id ? true : false} />
     )
       .sort((a, b) => a.likes - b.likes);
   };
