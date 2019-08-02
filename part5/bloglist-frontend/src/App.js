@@ -10,11 +10,10 @@ import Notification from "./components/Notification";
 import LoginForm from "./components/LoginForm";
 import Togglable from "./components/Togglable";
 
-import { useFieldChange, useResourse } from './hooks/index'
+import { useFieldChange } from './hooks/index'
 
 
 const App = () => {
-  const serviceBlogs2 = useResourse("http://localhost:3003/api/blogs/")
 
   const [blogs, setBlogs] = useState([]);
   const [user, setUser] = useState(null);
@@ -29,14 +28,17 @@ const App = () => {
   const passwordField = useFieldChange();
 
   useEffect(() => {
-    serviceBlogs2.getAll().then(initialBlogs => setBlogs(initialBlogs));
+    async function fetchData(){
+      const blogs = await serviceBlogs.getAll();
+      setBlogs(blogs);
+    }
+    fetchData();
 
     const signedUserToken = window.localStorage.getItem("signedUserToken");
     if (signedUserToken) {
       const user = JSON.parse(signedUserToken);
       setUser(user);
-      // serviceBlogs.setToken(user.token);
-      serviceBlogs2.setToken(user.token);
+      serviceBlogs.setToken(user.token);
     }
   }, []);
 
@@ -54,7 +56,7 @@ const App = () => {
       }
       const userWithToken = await loginService.login(credentials);
       window.localStorage.setItem("signedUserToken", JSON.stringify(userWithToken));
-      serviceBlogs2.setToken(userWithToken.token);
+      serviceBlogs.setToken(userWithToken.token);
 
       setUser(userWithToken);
       usernameField.setToDefault();
@@ -64,12 +66,7 @@ const App = () => {
     }
     catch (ex) {
       console.log(ex);
-      setNotification("Wrong username or password");
-      setNotificationType("red");
-      setTimeout(() => {
-        setNotification(null);
-        setNotificationType("black");
-      }, 2000);
+      getNotification("Wrong username of password", "red");
     }
     passwordField.setToDefault();
   };
@@ -77,24 +74,14 @@ const App = () => {
   const publishBlog = async (event) => {
     event.preventDefault();
     try {
-      const newBlog = await serviceBlogs2.publish({ "title": title, "author": author, "url": URL });
+      const newBlog = await serviceBlogs.publish({ "title": title, "author": author, "url": URL });
       setBlogs(blogs.concat(newBlog));
-      setNotification(`${title} has just been posted`);
-      setNotificationType("green");
-      setTimeout(() => {
-        setNotification(null);
-        setNotificationType("black");
-      }, 5000);
+      getNotification(`${title} has been posted`, "green");
     }
     catch (ex) {
       console.log(ex);
       console.log(user);
-      setNotification("Something went wrong. Please try again");
-      setNotificationType("red");
-      setTimeout(() => {
-        setNotification(null);
-        setNotificationType("black");
-      }, 2000);
+      getNotification("Something went wrong. Please try again", "red");
     }
     setAuthor("");
     setTitle("");
@@ -119,6 +106,15 @@ const App = () => {
     }
     return;
   };
+
+  const getNotification = (message, type) => {
+    setNotification(message);
+    setNotificationType(type);
+    setTimeout(() => {
+      setNotification(null);
+      setNotificationType("black");
+    }, 2000);
+  }
 
   const loginForm = () => {
 

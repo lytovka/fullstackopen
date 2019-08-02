@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import axios from "axios";
 
-
 export const useFieldChange = () => {
     const [value, setValue] = useState("");
 
@@ -21,24 +20,27 @@ export const useFieldChange = () => {
 }
 
 export const useResourse = (baseUrl) => {
-    let token = null;
 
+    const [resourses, setResourses] = useState([]);
+
+    let token = null;
     const setToken = (newToken) => {
         token = `bearer ${newToken}`;
     };
 
-    const [resourses, setResourses] = useState([]);
-
-    const getAll = () => {
-        const request = axios.get(baseUrl);
-        return request.then(response => response.data);
+    const getAll = async () => {
+        const response = await axios.get(baseUrl);
+        setResourses(response.data);
+        return response.data
     };
 
     const publish = async (resourse) => {
+        console.log(baseUrl);
         const config = {
             headers: { Authorization: token }
         };
         const response = await axios.post(baseUrl, resourse, config);
+        setResourses(resourses.concat(response.data));
         return response.data;
     };
 
@@ -47,9 +49,16 @@ export const useResourse = (baseUrl) => {
         return response.data;
     };
 
-    return {
-        resourses, getAll, publish, putLike, setToken
+    const service = {
+        getAll,
+        publish,
+        putLike,
+        setToken
     }
+
+    return [
+        resourses, service
+    ]
 
 }
 
