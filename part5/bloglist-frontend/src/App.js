@@ -10,10 +10,12 @@ import Notification from "./components/Notification";
 import LoginForm from "./components/LoginForm";
 import Togglable from "./components/Togglable";
 
-import { useFieldChange } from './hooks/index'
+import { useFieldChange, useResourse } from './hooks/index'
 
 
 const App = () => {
+  const serviceBlogs2 = useResourse("http://localhost:3003/api/blogs/")
+
   const [blogs, setBlogs] = useState([]);
   const [user, setUser] = useState(null);
   const [title, setTitle] = useState("");
@@ -26,15 +28,15 @@ const App = () => {
   const usernameField = useFieldChange();
   const passwordField = useFieldChange();
 
-
   useEffect(() => {
-    serviceBlogs.getAll().then(initialBlogs => setBlogs(initialBlogs));
+    serviceBlogs2.getAll().then(initialBlogs => setBlogs(initialBlogs));
 
     const signedUserToken = window.localStorage.getItem("signedUserToken");
     if (signedUserToken) {
       const user = JSON.parse(signedUserToken);
       setUser(user);
-      serviceBlogs.setToken(user.token);
+      // serviceBlogs.setToken(user.token);
+      serviceBlogs2.setToken(user.token);
     }
   }, []);
 
@@ -52,11 +54,13 @@ const App = () => {
       }
       const userWithToken = await loginService.login(credentials);
       window.localStorage.setItem("signedUserToken", JSON.stringify(userWithToken));
-      serviceBlogs.setToken(userWithToken.token);
+      serviceBlogs2.setToken(userWithToken.token);
 
       setUser(userWithToken);
       usernameField.setToDefault();
       passwordField.setToDefault();
+
+      console.log(userWithToken);
     }
     catch (ex) {
       console.log(ex);
@@ -73,7 +77,7 @@ const App = () => {
   const publishBlog = async (event) => {
     event.preventDefault();
     try {
-      const newBlog = await serviceBlogs.publish({ "title": title, "author": author, "url": URL });
+      const newBlog = await serviceBlogs2.publish({ "title": title, "author": author, "url": URL });
       setBlogs(blogs.concat(newBlog));
       setNotification(`${title} has just been posted`);
       setNotificationType("green");
@@ -84,6 +88,7 @@ const App = () => {
     }
     catch (ex) {
       console.log(ex);
+      console.log(user);
       setNotification("Something went wrong. Please try again");
       setNotificationType("red");
       setTimeout(() => {

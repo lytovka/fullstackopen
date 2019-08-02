@@ -36,3 +36,4 @@ const deletePost = async(blogId, userId) => {
 };
 
 export default { getAll, publish, putLike, deletePost,setToken };
+
