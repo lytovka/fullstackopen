@@ -42,10 +42,13 @@ const App = () => {
     }
   }, []);
 
+
   const blogsToShow = user === null ?
     [] :
     blogs.filter(blog => user.username === blog.author || user.name === blog.author)
       .sort((a, b) => b.likes - a.likes);
+
+
 
   const handleLogin = async (event) => {
     event.preventDefault();
@@ -61,8 +64,6 @@ const App = () => {
       setUser(userWithToken);
       usernameField.setToDefault();
       passwordField.setToDefault();
-
-      console.log(userWithToken);
     }
     catch (ex) {
       console.log(ex);
