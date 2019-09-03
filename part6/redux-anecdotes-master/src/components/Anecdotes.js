@@ -1,26 +1,21 @@
 import React from 'react';
+import {connect} from 'react-redux'
 import Anecdote from './Anecdote'
 import { addVote } from '../reducers/anecdoteReducer'
 import { addNotification } from '../reducers/notificationReducer'
 
-const Anecdotes = ({ store }) => {
-
-    const anecdotes = store.getState().filter === "" ? store.getState().anecdotes
-        :
-        store.getState().anecdotes
-            .sort((a, b) => b.votes - a.votes)
-            .filter(a => a.content.toLocaleLowerCase().includes(store.getState().filter.toLocaleLowerCase()))
+const Anecdotes = (props) => {
 
     const vote = (id) => {
-        store.dispatch(addVote(id));
+        props.addVote(id);
 
-        const findAnecdote = anecdotes.find((a) => {
+        const findAnecdote = props.anecdotesShow.find((a) => {
             return a.id === id
         })
 
-        store.dispatch(addNotification(`You voted '${findAnecdote.content}'`))
+        props.addNotification(`You voted '${findAnecdote.content}'`)
         setTimeout(() => {
-            store.dispatch(addNotification(null))
+            props.addNotification(null)
         }, 5000)
     }
 
@@ -28,7 +23,7 @@ const Anecdotes = ({ store }) => {
         <>
             <h2>Anecdotes</h2>
             {
-                anecdotes.map(anecdote =>
+                props.anecdotesShow.sort((a, b) => b.votes - a.votes).map(anecdote =>
                     <Anecdote key={anecdote.id} anecdote={anecdote} voteButtonClick={() => vote(anecdote.id)} />
                 )
             }
@@ -36,4 +31,27 @@ const Anecdotes = ({ store }) => {
     )
 }
 
-export default Anecdotes
+const anecdotesToShow = ({anecdotes, filter}) => {
+    return filter === "" ? anecdotes
+    :
+    anecdotes.filter(a => a.content.toLocaleLowerCase().includes(filter.toLocaleLowerCase()))
+}
+
+const mapStateToProps = (state) => {
+    console.log(state);
+    return{
+        anecdotesShow: anecdotesToShow(state),
+        filter: state.filter,
+        notification: state.notification
+    }
+}
+
+const mapDispatchToProps = {
+    addNotification,
+    addVote
+}
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(Anecdotes)
