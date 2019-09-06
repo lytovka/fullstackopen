@@ -1,22 +1,20 @@
 import React from 'react';
 import {connect} from 'react-redux'
+import anecdoteService from '../services/anecdotes'
 import Anecdote from './Anecdote'
 import { addVote } from '../reducers/anecdoteReducer'
 import { addNotification } from '../reducers/notificationReducer'
 
 const Anecdotes = (props) => {
 
-    const vote = (id) => {
-        props.addVote(id);
-
+    const vote = async (id) => {
+        // const updatedVote = await anecdoteService.putVotes(id);
         const findAnecdote = props.anecdotesShow.find((a) => {
             return a.id === id
         })
+        props.addVote(findAnecdote, id);
 
-        props.addNotification(`You voted '${findAnecdote.content}'`)
-        setTimeout(() => {
-            props.addNotification(null)
-        }, 5000)
+        props.addNotification(`You voted '${findAnecdote.content}'`, 5)
     }
 
     return (
