@@ -8,7 +8,6 @@ import { addNotification } from '../reducers/notificationReducer'
 const Anecdotes = (props) => {
 
     const vote = async (id) => {
-        // const updatedVote = await anecdoteService.putVotes(id);
         const findAnecdote = props.anecdotesShow.find((a) => {
             return a.id === id
         })
